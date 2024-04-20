@@ -11,13 +11,13 @@
       ansible.builtin.template:
         src: templates/tailscale-heartbeat.sh.j2
         dest: "{{ scriptsremotedir }}tailscale-heartbeat.sh"    
-        owner: "{{ scriptsremotedir }}"
+        owner: "{{ scriptowner }}"
     
     - name: Copy send_nrdp.sh to remote host
       ansible.builtin.template:
         src: files/send_nrdp.sh
         dest: "{{ scriptsremotedir}}send_nrdp.sh"
-        owner: "{{ scriptsremotedir }}"
+        owner: "{{ scriptowner }}"
     
     - name: Create cronjob to run tailscale-heartbeat.sh 
       ansible.builtin.cron:
