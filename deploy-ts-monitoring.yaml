@@ -1,5 +1,5 @@
 ---
-- hosts: tailscale-endpoints            # Host group for your endpoints
+- hosts: tailscale-endpoints            # Host group for your endpoints!
   vars:
     token: your-token-here              # Your NRDP token.
     nrdpendpoint: your-nrdp-endpoint    # Your NRDP endpoint. Just include the hostname or IP (No http:// or /nrdp)
