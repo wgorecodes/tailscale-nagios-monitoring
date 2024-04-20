@@ -4,7 +4,7 @@ This repo consists of a simple Ansible playbook which deploys a bash script to y
 
 # Setup
 
-1. Open `deploy-ts-monitoring.yaml` and change the variables as documented
+1. Open `deploy-ts-monitoring.yaml` and change the variables as documented (Note, both scripts must be in the same directory to function properly)
 2. Create a host_vars file for each of your endpoints in host_vars, based on `host_vars/endpoint1.yaml`
 3. Run the Ansible playbook with `ansible-playbook deploy-ts-monitoring.yaml`
 4. Modify tailscale-endpoint.cfg to include a host definition for each of your Tailscale endpoints

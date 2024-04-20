@@ -1,26 +1,28 @@
 ---
 - hosts: tailscale-endpoints            # Host group for your endpoints!
   vars:
-    token: your-token-here              # Your NRDP token.
+    nrdptoken: your-token-here              # Your NRDP token.
     nrdpendpoint: your-nrdp-endpoint    # Your NRDP endpoint. Just include the hostname or IP (No http:// or /nrdp)
     scriptsremotedir: /usr/local/       # If you want send_nrdp.sh and tailscale-heartbeat.sh to live somewhere else, change this. Include the trailing slash.
     scriptowner: username               # Who is going to own the scripts and run the cron job.
     interval: 5                         # Interval in minutes to run the heartbeat script
   tasks:
     - name: Copy tailscale-heartbeat.sh to remote host
-      ansible.builtin.template:
-        src: templates/tailscale-heartbeat.sh.j2
+      ansible.builtin.copy:
+        src: files/tailscale-heartbeat.sh.j2
         dest: "{{ scriptsremotedir }}tailscale-heartbeat.sh"    
         owner: "{{ scriptowner }}"
+      become: true
     
     - name: Copy send_nrdp.sh to remote host
-      ansible.builtin.template:
+      ansible.builtin.copy:
         src: files/send_nrdp.sh
         dest: "{{ scriptsremotedir}}send_nrdp.sh"
         owner: "{{ scriptowner }}"
+      become: true
     
     - name: Create cronjob to run tailscale-heartbeat.sh 
       ansible.builtin.cron:
         name: "Report Tailscale status to Nagios"
         minute: /5
-        job: "{{ scriptsremotedir }}tailscale-heartbeat.sh"
+        job: "{{ scriptsremotedir }}tailscale-heartbeat.sh {{ nrdptoken }} {{ nrdpendpoint }} {{ nagioshost }}"
