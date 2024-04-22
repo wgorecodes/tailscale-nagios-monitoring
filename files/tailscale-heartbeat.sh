@@ -3,14 +3,19 @@
 # Tailscale heartbeat script for Nagios NRDP
 # Uses send_nrdp.sh to report Tailscale connectivity status to Nagios
 
-token=$1
+token="$1"
 host="$3"
 nrdp_endpoint="http://$2/nrdp/"
 
-echo $nrdp_endpoint
+if [[ $1 == "" || $2 == "" || $3 == "" ]]; then
+    echo "Missing arguments, exitting."
+    exit 1
+fi
+
+echo "$(pwd)/send_nrdp.sh"
 
 # Check if send_nrdp.sh exists. If not we're screwed!
-if ! test -f ./send_nrdp.sh; then
+if ! test -f "$(pwd)/send_nrdp.sh"; then
   echo "send_nrdp.sh missing! Exitting."
   exit 1
 fi
@@ -34,7 +39,7 @@ systemd_statustext=$(systemctl show -p StatusText --value tailscaled)
 printf "tailscaled.service statustext: $systemd_statustext\n"
 
 # Compare statustext
-if [ "$systemd_statustext" -eq "Stopped; run 'tailscale up' to log in" ]; then
+if [[ "$systemd_statustext" == "Stopped; run 'tailscale up' to log in" ]]; then
     # Tailscale isn't connected!
     ./send_nrdp.sh -u $nrdp_endpoint -t $token -H $host -s "Tailscale Connection" -S 1 -o "tailscale is not connected! Status text: $systemd_statustext"
 else

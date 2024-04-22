@@ -9,9 +9,10 @@
   tasks:
     - name: Copy tailscale-heartbeat.sh to remote host
       ansible.builtin.copy:
-        src: files/tailscale-heartbeat.sh.j2
+        src: files/tailscale-heartbeat.sh
         dest: "{{ scriptsremotedir }}tailscale-heartbeat.sh"    
         owner: "{{ scriptowner }}"
+        mode: a+x
       become: true
     
     - name: Copy send_nrdp.sh to remote host
@@ -19,10 +20,11 @@
         src: files/send_nrdp.sh
         dest: "{{ scriptsremotedir}}send_nrdp.sh"
         owner: "{{ scriptowner }}"
+        mode: a+x
       become: true
     
     - name: Create cronjob to run tailscale-heartbeat.sh 
       ansible.builtin.cron:
         name: "Report Tailscale status to Nagios"
-        minute: /5
+        minute: "{{ interval }}"
         job: "{{ scriptsremotedir }}tailscale-heartbeat.sh {{ nrdptoken }} {{ nrdpendpoint }} {{ nagioshost }}"
