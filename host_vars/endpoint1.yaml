@@ -1,3 +1,4 @@
-# Create a file for each of your hosts and change the value of this variable to the Nagios host name of your endpoint
+# Create a copy of this file for each of your Tailscale endpoints and name it as you have the endpoint named in your Ansible inventory. 
+# Change the value of this variable to the Nagios host name of your endpoint.
 ---
 nagioshost: endpoint1
